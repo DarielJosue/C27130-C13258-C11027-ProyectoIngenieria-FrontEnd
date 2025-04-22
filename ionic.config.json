@@ -1,0 +1,7 @@
+{
+  "name": "BolsaDeTrabajoFrontEnd",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}
