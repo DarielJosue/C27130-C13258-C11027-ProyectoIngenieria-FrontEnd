@@ -2,7 +2,7 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>{{ isLogin ? 'Iniciar sesión' : 'Registrarse' }}</ion-title>
+        <ion-title>{{ isLogin ? "Iniciar sesión" : "Registrarse" }}</ion-title>
       </ion-toolbar>
     </ion-header>
 
@@ -10,31 +10,21 @@
       <div class="login-container">
         <!-- Tabs -->
         <div class="tabs">
-          <button 
-            @click="isLogin = true" 
-            :class="{ 'active': isLogin }"
-          >
+          <button @click="isLogin = true" :class="{ active: isLogin }">
             Iniciar sesión
           </button>
-          
-          <button 
-            @click="isLogin = false" 
-            :class="{ 'active': !isLogin }"
-          >
+
+          <button @click="isLogin = false" :class="{ active: !isLogin }">
             Registrarse
           </button>
         </div>
 
         <transition name="slide-up" mode="out-in">
           <!-- Formulario de Login -->
-          <form 
-            v-if="isLogin" 
-            @submit.prevent="handleLogin" 
-            key="login"
-          >
+          <form v-if="isLogin" @submit.prevent="handleLogin" key="login">
             <ion-list>
               <p>Usuario o correo</p>
-              <ion-item> 
+              <ion-item>
                 <ion-input
                   type="text"
                   placeholder="example@example.com"
@@ -75,11 +65,16 @@
           </form>
 
           <!-- Formulario de Registro -->
-          <form 
-            v-else 
-            @submit.prevent="handleRegister" 
-            key="register"
-          >
+          <form v-else @submit.prevent="handleRegister" key="register">
+            <ion-item>
+              <ion-label>Tipo de usuario</ion-label>
+              <ion-select v-model="loginUserType" interface="popover">
+                <ion-select-option value="applicant"
+                  >Candidato</ion-select-option
+                >
+                <ion-select-option value="company">Empresa</ion-select-option>
+              </ion-select>
+            </ion-item>
             <ion-list>
               <p>Nombre</p>
               <ion-item>
@@ -116,7 +111,6 @@
                   v-model="email"
                 ></ion-input>
               </ion-item>
-
               <p>Contraseña</p>
               <ion-item :class="{ 'input-error': passwordError }">
                 <ion-input
@@ -146,7 +140,9 @@
               </ion-item>
             </ion-list>
 
-            <p v-if="passwordError" class="error-message">Las contraseñas no coinciden</p>
+            <p v-if="passwordError" class="error-message">
+              Las contraseñas no coinciden
+            </p>
             <p v-if="error" class="error-message">{{ error }}</p>
 
             <ion-button
@@ -166,47 +162,57 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
-import { useRouter } from 'vue-router';
-import axios from 'axios';
-import { eye, eyeOff } from 'ionicons/icons';
+import {
+  login,
+  registerApplicant,
+  registerCompanyUser,
+} from "@/services/authService.ts";
+import { ref, computed } from "vue";
+import { useRouter } from "vue-router";
+import { eye, eyeOff } from "ionicons/icons";
 import {
   IonPage,
+  IonSelect,
+  IonSelectOption,
+  IonLabel,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
   IonContent,
   IonList,
   IonItem,
   IonInput,
   IonButton,
   IonSpinner,
-  IonIcon
-} from '@ionic/vue';
+  IonIcon,
+} from "@ionic/vue";
+
+const loginUserType = ref("");
 
 const router = useRouter();
 const isLogin = ref(true);
 
 // Variables para Login
-const loginInput = ref('');
-const password = ref('');
+const loginInput = ref("");
+const password = ref("");
 const showPassword = ref(false);
 
 // Variables para Registro
-const name = ref('');
-const lastname = ref('');
-const username = ref('');
-const email = ref('');
-const confirmPassword = ref('');
+const name = ref("");
+const lastname = ref("");
+const username = ref("");
+const email = ref("");
+const confirmPassword = ref("");
 const showConfirmPassword = ref(false);
 
 const loading = ref(false);
-const error = ref('');
+const error = ref("");
 
-const API_URL = import.meta.env.VITE_API_URL;
-
-// Computed
 const passwordError = computed(() => {
-  return password.value !== confirmPassword.value && confirmPassword.value !== '';
+  return (
+    password.value !== confirmPassword.value && confirmPassword.value !== ""
+  );
 });
-
 
 const togglePassword = () => {
   showPassword.value = !showPassword.value;
@@ -220,18 +226,16 @@ const toggleConfirmPassword = () => {
 const handleLogin = async () => {
   try {
     loading.value = true;
-    error.value = '';
+    error.value = "";
 
-    const response = await axios.post(`${API_URL}/login`, {
+    await login({
       loginInput: loginInput.value,
-      password: password.value
+      password: password.value,
     });
 
-    localStorage.setItem('authToken', response.data.token);
-    router.push('/tabs/home');
-
+    router.push("/tabs/home");
   } catch (err) {
-    error.value = err.response?.data?.message || 'Error de conexión';
+    error.value = err.response?.data?.message || "Error de conexión";
   } finally {
     loading.value = false;
   }
@@ -240,27 +244,37 @@ const handleLogin = async () => {
 const handleRegister = async () => {
   try {
     if (password.value !== confirmPassword.value) {
-      error.value = 'Las contraseñas no coinciden';
+      error.value = "Las contraseñas no coinciden";
       return;
     }
 
     loading.value = true;
-    error.value = '';
-
-    const response = await axios.post(`${API_URL}/register`, {
-      name: name.value,
-      lastname: lastname.value,
-      username: username.value,
-      email: email.value,
-      password: password.value,
-      password_confirmation: password.value
-    });
-
-    localStorage.setItem('authToken', response.data.token);
-    router.push('/tabs/home');
-
+    error.value = "";
+    if (loginUserType.value === "applicant") {
+      await registerApplicant({
+        name: name.value,
+        lastname: lastname.value,
+        username: username.value,
+        email: email.value,
+        password: password.value,
+        password_confirmation: password.value,
+      });
+    } else {
+      await registerCompanyUser({
+        name: name.value,
+        lastname: lastname.value,
+        username: username.value,
+        email: email.value,
+        password: password.value,
+        password_confirmation: password.value,
+        company_id: null,
+        role: "admin",
+      });
+    }
+    router.push("/tabs/home");
   } catch (err) {
-    error.value = err.response?.data?.message || 'Error en el registro';
+    error.value = err.response?.data?.message || "Error en el registro";
+    console.error(err);
   } finally {
     loading.value = false;
   }
@@ -268,7 +282,7 @@ const handleRegister = async () => {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Jaldi&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Jaldi&display=swap");
 
 /* transicion */
 .slide-up-enter-active,
@@ -286,7 +300,6 @@ const handleRegister = async () => {
   transform: translateY(-20px);
 }
 
-
 button {
   background: none;
   border: none;
@@ -300,9 +313,8 @@ button {
   border-bottom: 2px solid #4a75e7;
 }
 
-
 * {
-  font-family: 'Jaldi', sans-serif;
+  font-family: "Jaldi", sans-serif;
 }
 
 ion-content {
@@ -357,11 +369,10 @@ ion-input {
 }
 
 ion-button {
-
-  --background: #5f87e3;    
-  --color: #ffffff;         
-  --border-radius: 12px;    
-  font-weight: bold;        
+  --background: #5f87e3;
+  --color: #ffffff;
+  --border-radius: 12px;
+  font-weight: bold;
 }
 
 .forgot-password {
