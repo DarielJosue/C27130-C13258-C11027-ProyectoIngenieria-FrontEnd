@@ -124,6 +124,8 @@ import {
   IonFab,
   IonFabButton,
   IonTextarea,
+  IonModal,
+  IonButtons,
 } from "@ionic/vue";
 import {
   arrowBackOutline,
@@ -143,7 +145,7 @@ const users = ref<
   }>
 >([]); /* ¡DESPUÉS SE PUEDE AGREGAR LA IMAGEN DE PERFIL! */
 
-const selectedUser = ref<number | null>(null); 
+const selectedUser = ref<number | null>(null);
 const messageText = ref("");
 const API_URL = import.meta.env.VITE_API_URL;
 const token = localStorage.getItem("authToken");
@@ -157,7 +159,6 @@ const handleTextInput = (event: CustomEvent) => {
   console.log("Evento input:", event.detail.value); // 🐛
   messageText.value = event.detail.value;
 };
-
 
 onMounted(async () => {
   try {
@@ -177,8 +178,6 @@ onMounted(async () => {
   }
 });
 
-
-
 const sendMessage = async () => {
   console.log("Tipo de selectedUser:", typeof selectedUser.value); // 🐛
   console.log("Valor de selectedUser:", selectedUser.value); // 🐛
@@ -189,16 +188,23 @@ const sendMessage = async () => {
   }
 
   try {
-    await axios.post(`${API_URL}/messages/send`, {
-      recipient_id: selectedUser.value, // solo un ID
-      message: messageText.value.trim(),
-    });
-
+    await axios.post(
+      `${API_URL}/messages/send`,
+      {
+        recipient_id: selectedUser.value, // solo un ID
+        message: messageText.value.trim(),
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
     alert("Mensaje enviado correctamente");
-        
-        messageText.value = "";
-    selectedUser.value = null; 
+
+    messageText.value = "";
+    selectedUser.value = null;
     isModalOpen.value = false;
   } catch (error) {
     console.error("Error al enviar el mensaje:", error);
@@ -210,7 +216,7 @@ const sendMessage = async () => {
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Jaldi&display=swap");
 
-/* Barra de búsqueda */
+
 .search-bar {
   display: flex;
   align-items: center;
