@@ -98,8 +98,11 @@ const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString();
 };
 
+const CV_URL = "http://localhost:8000";
+
 const downloadCV = (filePath: string) => {
-    window.open(`/storage/${filePath}`, '_blank');
+    if (!filePath) return alert('No hay currículum disponible');
+    window.open(`${CV_URL}/storage/${filePath}`, '_blank');
 };
 </script>
 cam

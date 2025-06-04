@@ -11,7 +11,7 @@ export const uploadCurriculum = async (file: File) => {
         },
     });
 
-    return response.data.curriculum.cv_id;  
+    return response.data.curriculum.cv_id;
 };
 
 

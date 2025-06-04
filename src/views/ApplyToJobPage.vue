@@ -106,8 +106,6 @@ function goToHome() {
     //go to home
 
 }
-
-
 onMounted(async () => {
     curriculums.value = await getUserCurriculums();
 });
