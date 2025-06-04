@@ -82,6 +82,11 @@ const routes: Array<RouteRecordRaw> = [
         path: "chat/:id",
         component: () => import("@/views/ChatPage.vue"),
       },
+      {
+        path: "my-applications",
+      component: () => import("@/views/AplicationPage.vue"),
+      meta: { requiresAuth: true },
+},   
     ],
   },
 ];

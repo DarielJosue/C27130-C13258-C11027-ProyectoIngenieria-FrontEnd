@@ -17,7 +17,15 @@
                     <ion-label>
                         <h2>{{ application.user.name }}</h2>
                         <p>{{ application.message }}</p>
-                        <p>Estado: {{ application.status }}</p>
+                        <div class="estado-chip" :class="{
+                            'estado-aplicado': application.status === 'Aplicado',
+                            'estado-revisado': application.status === 'Revisado',
+                            'estado-aceptado': application.status === 'Aceptado',
+                            'estado-rechazado': application.status === 'Rechazado'
+
+                        }">
+                            <p>Estado: {{ application.status }}</p>
+                        </div>
                         <p>Fecha: {{ formatDate(application.application_date) }}</p>
                         <ion-button size="small" @click="downloadCV(application.curriculum.file_path)">Ver
                             CV</ion-button>
@@ -97,8 +105,84 @@ const downloadCV = (filePath: string) => {
 cam
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Jaldi&display=swap");
+* {
+    font-family: "Jaldi", sans-serif;
+}
 
 * {
     font-family: "Jaldi", sans-serif;
 }
+
+* {
+    font-family: "Jaldi", sans-serif;
+}
+
+ion-title {
+    color: var(--color-primary);
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+ion-select {
+    margin: 16px 0;
+    --color: var(--color-primary);
+}
+
+ion-item {
+    --background: var(--ion-background-color);
+    --color: var(--ion-text-color);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    margin-bottom: 16px;
+    padding: 12px;
+}
+
+ion-label h2 {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 6px;
+}
+
+ion-label p {
+    margin: 2px 0;
+    font-size: 0.9rem;
+}
+
+/* Chips de estado */
+.estado-chip {
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    border-radius: 12px;
+    font-weight: 600;
+    margin-top: 6px;
+}
+
+.estado-aplicado {
+    background-color: rgba(95, 135, 227, 0.2);
+    color: var(--color-primary);
+}
+
+.estado-revisado {
+    background-color: rgba(255, 204, 0, 0.2);
+    color: #cc9900;
+}
+
+.estado-aceptado {
+    background-color: rgba(0, 200, 83, 0.2);
+    color: #00c853;
+}
+
+.estado-rechazado {
+    background-color: rgba(255, 82, 82, 0.2);
+    color: #d32f2f;
+}
+
+ion-button {
+    margin-top: 10px;
+    --background: var(--color-secondary);
+    --color: white;
+    --border-radius: 8px;
+}
+
 </style>
