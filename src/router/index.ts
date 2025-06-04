@@ -64,6 +64,11 @@ const routes: Array<RouteRecordRaw> = [
         meta: { requiresAuth: true },
       },
       {
+        path: "/company/register",
+        component: () => import("@/views/CompanyRegisterPage.vue"),
+        meta: { requiresAuth: true },
+      },
+      {
         path: "notifications",
         component: () => import("@/views/NotificationsPage.vue"),
         meta: { requiresAuth: true },
@@ -86,11 +91,10 @@ const router = createRouter({
   routes,
 });
 
-/*/ Guardián de navegación global
+import { useAuthStore } from "@/stores/authStore";
+
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
-  
-  // Verificar si la ruta requiere autenticación
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (!authStore.isAuthenticated) {
       next({
@@ -101,13 +105,13 @@ router.beforeEach((to, from, next) => {
       next();
     }
   } else {
-    // Si el usuario ya está autenticado y trata de acceder al login
+    
     if (to.path === '/auth' && authStore.isAuthenticated) {
       next('/tabs/home'); // Redirige al home si ya está logueado
     } else {
       next();
     }
   }
-});*/
+});
 
 export default router;

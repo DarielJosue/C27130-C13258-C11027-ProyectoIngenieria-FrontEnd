@@ -5,15 +5,15 @@ const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   headers: {
     "Content-Type": "application/json",
-    Accept: "application/json",    
+    Accept: "application/json",
   },
 });
 
 apiClient.interceptors.request.use(
   (config) => {
     const authStore = useAuthStore();
-    if (authStore.token) {
-      config.headers.Authorization = `Bearer ${authStore.token}`;
+    if (authStore.getToken()) {
+      config.headers.Authorization = `Bearer ${authStore.getToken()}`;
     }
     return config;
   },
@@ -23,12 +23,12 @@ apiClient.interceptors.request.use(
 );
 
 apiClient.interceptors.response.use(
-  (response) => response, 
+  (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
       const authStore = useAuthStore();
-      authStore.clearAuthData(); 
-      window.location.href = "/login";
+      authStore.clearAuthData();
+      window.location.href = "/auth";
     }
     return Promise.reject(error);
   }

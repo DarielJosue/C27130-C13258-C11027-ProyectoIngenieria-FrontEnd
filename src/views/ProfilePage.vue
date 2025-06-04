@@ -38,6 +38,9 @@
       <ion-item>
         <ion-button expand="block" @click="goToEditProfile" color="primary">Editar perfil</ion-button>
       </ion-item>
+      <ion-item>
+        <ion-button expand="block" @click="handleLogout" color="primary">Cerrar sesión</ion-button>
+      </ion-item>
     </ion-content>
   </ion-page>
 </template>
@@ -46,9 +49,9 @@
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonAvatar, IonIcon, IonItem, IonLabel, IonList } from '@ionic/vue';
 import { personOutline, arrowBackOutline, callOutline, locationOutline, heartOutline } from 'ionicons/icons';
 import { useRouter } from 'vue-router';
+import { authService } from '@/services/authService';
 
 const router = useRouter();
-
 const goBack = () => {
   router.back();
 };
@@ -57,7 +60,10 @@ const goToEditProfile = () => {
   router.push('/edit-profile');
 };
 
-
+const handleLogout = async () => {
+  await authService.logout();
+  await router.replace('/auth');
+};
 // Simulación temporal de datos del usuario
 const user = {
   name: 'David',

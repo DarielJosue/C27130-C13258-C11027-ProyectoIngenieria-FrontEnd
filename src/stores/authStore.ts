@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 
+
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     token: localStorage.getItem('authToken') || null,
@@ -22,15 +23,17 @@ export const useAuthStore = defineStore('auth', {
       this.userId = userId;
       localStorage.setItem('userId', userId);
     },
+
     getUserId() {
       return {
         userId: this.userId,
       };
     },
-    getCompanyId() {
-      return {
-        companyId: this.companyId,
-      };
+    getCompanyId(): number | null {
+      return this.companyId ? parseInt(this.companyId, 10) : null;
+    },
+    getToken(): string | null {
+      return this.token ? this.token : null;
     },
     clearAuthData() {
       this.token = null;
@@ -38,6 +41,7 @@ export const useAuthStore = defineStore('auth', {
       this.userType = null;
       localStorage.removeItem('authToken');
       localStorage.removeItem('userType');
+      localStorage.removeItem('userId');
       localStorage.removeItem('companyId');
     }
   },
