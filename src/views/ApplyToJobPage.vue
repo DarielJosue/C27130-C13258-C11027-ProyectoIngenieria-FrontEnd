@@ -95,11 +95,18 @@ const submitApplication = async () => {
             message: message.value,
         });
         alert('Aplicación enviada correctamente');
+        goToHome();
+
     } catch (error) {
         console.error('Error al enviar aplicación:', error);
         alert('Ocurrió un error al enviar la aplicación.');
     }
 };
+function goToHome() {
+    //go to home
+
+}
+
 
 onMounted(async () => {
     curriculums.value = await getUserCurriculums();
@@ -109,6 +116,6 @@ onMounted(async () => {
 @import url("https://fonts.googleapis.com/css2?family=Jaldi&display=swap");
 
 * {
-  font-family: "Jaldi", sans-serif;
+    font-family: "Jaldi", sans-serif;
 }
 </style>

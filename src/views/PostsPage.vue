@@ -174,6 +174,8 @@ const handleSubmit = async () => {
   border-radius: 20px;
   box-shadow: 0 4px 22px 0 rgba(100, 141, 219, 0.10);
   padding: 28px 22px 20px 22px;
+  max-height: 85vh;
+  overflow-y: auto;
 }
 
 .job-post-title {
@@ -279,5 +281,10 @@ ion-textarea::part(native) {
     padding: 16px 6px 14px 6px;
     margin: 12px auto 0 auto;
   }
+}
+
+ion-header ion-toolbar[color="primary"] {
+  --background: #648DDB !important;
+  --ion-color-base: #648DDB !important;
 }
 </style>

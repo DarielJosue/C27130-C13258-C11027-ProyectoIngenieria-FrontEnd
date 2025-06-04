@@ -19,11 +19,13 @@ export const getAllJobPosts = async () => {
 
 
 export const getCompanyJobPosts = async (companyId: string) => {
-  const response = await apiClient.get(`/job-posts/by-company/${companyId}`);
+  const response = await apiClient.get(`/job-posts/by-companyId/${companyId}`);
   return response.data.data;
 };
 
-export const getJobPostById = (id: number) => apiClient.get(`/job-posts/${id}`);
+export const getJobPostById = (id: number) => apiClient.get(`/job-posts/by-company/${id}`);//no tocar
+
+export const getJobPostByCompany = () => apiClient.get('/job-posts/company');
 
 export const applyToJobPost = (id: number) => apiClient.post(`/job-posts/${id}/apply`);
 

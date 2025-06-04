@@ -23,7 +23,6 @@ export const useAuthStore = defineStore('auth', {
       this.userId = userId;
       localStorage.setItem('userId', userId);
     },
-
     getUserId() {
       return {
         userId: this.userId,

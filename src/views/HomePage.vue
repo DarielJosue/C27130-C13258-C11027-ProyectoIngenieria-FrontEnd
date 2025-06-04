@@ -4,7 +4,12 @@
       <ion-toolbar>
         <div class="search-bar">
           <ion-icon :icon="arrowBackOutline" class="icon-btn" />
+          <template v-if="authStore.userType !== 'company'">
 
+            <ion-select interface="popover" placeholder="Menú" v-model="selectedOption" @ionChange="handleCompanyMenu">
+              <ion-select-option value="my-applications">Ver Postulaciones</ion-select-option>
+            </ion-select>
+          </template>
 
           <template v-if="authStore.userType === 'company'">
             <ion-select interface="popover" placeholder="Menú Empresa" v-model="selectedOption"
@@ -78,6 +83,9 @@ const handleCompanyMenu = () => {
     router.push('/company/applications');
   } else if (selectedOption.value === 'posts') {
     router.push('/company/posts');
+  } else if (selectedOption.value === 'my-applications') {
+    console.log('Redirigiendo a mis postulaciones');
+    router.push('my-applications');
   }
 };
 
@@ -204,5 +212,10 @@ function goToRegisterCompany() {
   font-weight: 500;
   letter-spacing: 0.03em;
   box-shadow: none;
+}
+
+ion-header ion-toolbar[color="primary"] {
+  --background: #648DDB !important;
+  --ion-color-base: #648DDB !important;
 }
 </style>

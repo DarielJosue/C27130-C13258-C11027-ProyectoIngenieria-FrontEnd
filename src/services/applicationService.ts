@@ -40,3 +40,9 @@ export const updateApplicationStatus = async (application_id: string, status: st
         throw error;
     }
 };
+
+export const getUserApplications = async () => {
+    const response = await apiClient.get('/applications/by-user');
+    console.log('User applications response:', response.data);
+    return response.data;
+}

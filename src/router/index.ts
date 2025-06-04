@@ -24,16 +24,6 @@ const routes: Array<RouteRecordRaw> = [
     meta: { requiresAuth: true },
   },
   {
-    path: "/jobs/:id/apply",
-    component: () => import("@/views/ApplyToJobPage.vue") as Promise<typeof import("*.vue")>,
-    meta: { requiresAuth: true },
-  },
-  {
-    path: "/company/applications",
-    component: () => import("@/views/CompanyApplicationsPage.vue") as Promise<typeof import("*.vue")>,
-    meta: { requiresAuth: true },
-  },
-  {
     path: "/tabs",
     component: TabsPage,
     children: [
@@ -83,10 +73,20 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("@/views/ChatPage.vue"),
       },
       {
+        path: "/jobs/:id/apply",
+        component: () => import("@/views/ApplyToJobPage.vue") as Promise<typeof import("*.vue")>,
+        meta: { requiresAuth: true },
+      },
+      {
         path: "my-applications",
-      component: () => import("@/views/AplicationPage.vue"),
-      meta: { requiresAuth: true },
-},   
+        component: () => import("@/views/AplicationPage.vue"),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "/company/applications",
+        component: () => import("@/views/CompanyApplicationsPage.vue") as Promise<typeof import("*.vue")>,
+        meta: { requiresAuth: true },
+      },
     ],
   },
 ];
@@ -110,7 +110,7 @@ router.beforeEach((to, from, next) => {
       next();
     }
   } else {
-    
+
     if (to.path === '/auth' && authStore.isAuthenticated) {
       next('/tabs/home'); // Redirige al home si ya está logueado
     } else {

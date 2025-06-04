@@ -105,6 +105,7 @@ const downloadCV = (filePath: string) => {
 cam
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Jaldi&display=swap");
+
 * {
     font-family: "Jaldi", sans-serif;
 }
@@ -182,7 +183,11 @@ ion-button {
     margin-top: 10px;
     --background: var(--color-secondary);
     --color: white;
-    --border-radius: 8px;
+    --border-radius: 8px;
 }
 
+ion-header ion-toolbar[color="primary"] {
+    --background: #648DDB !important;
+    --ion-color-base: #648DDB !important;
+}
 </style>

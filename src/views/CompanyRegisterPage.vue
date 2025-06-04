@@ -134,6 +134,8 @@ async function registerCompany() {
     border-radius: 18px;
     box-shadow: 0 4px 24px 0 rgba(100, 141, 219, 0.09);
     padding: 32px 24px 22px 24px;
+    max-height: 85vh;
+    overflow-y: auto;
 }
 
 .register-company-form {
@@ -189,5 +191,10 @@ ion-textarea::part(native) {
         padding: 20px 6px 16px 6px;
         margin: 12px auto;
     }
+}
+
+ion-header ion-toolbar[color="primary"] {
+    --background: #648DDB !important;
+    --ion-color-base: #648DDB !important;
 }
 </style>

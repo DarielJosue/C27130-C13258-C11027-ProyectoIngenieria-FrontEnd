@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
   <ion-page>
     <ion-header>
       <ion-toolbar>
@@ -44,7 +44,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { getUserApplications } from '@/services/applicationService';
 
 const authStore = useAuthStore();
-const userId = authStore.userId; 
+const userId = authStore.getUserId();
 const applications = ref<any[]>([]);
 
 onMounted(async () => {
@@ -54,7 +54,7 @@ onMounted(async () => {
   }
 
   try {
-    applications.value = await getUserApplications(userId);
+    applications.value = await getUserApplications();
   } catch (error) {
     console.error("Error al cargar las postulaciones:", error);
   }
@@ -78,20 +78,24 @@ const downloadCV = (filePath: string) => {
   font-weight: 600;
   margin-top: 6px;
 }
+
 .estado-aplicado {
   background-color: rgba(95, 135, 227, 0.2);
   color: var(--color-primary);
 }
+
 .estado-revisado {
   background-color: rgba(255, 204, 0, 0.2);
   color: #cc9900;
 }
+
 .estado-aceptado {
   background-color: rgba(0, 200, 83, 0.2);
   color: #00c853;
 }
+
 .estado-rechazado {
   background-color: rgba(255, 82, 82, 0.2);
   color: #d32f2f;
 }
-</style> -->
+</style>
