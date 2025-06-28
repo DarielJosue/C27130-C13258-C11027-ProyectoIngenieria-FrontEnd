@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "318014141837",
+    "project_id": "jobboard-8a46a",
+    "storage_bucket": "jobboard-8a46a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:318014141837:android:cb9e2424a5166f35fb79c4",
+        "android_client_info": {
+          "package_name": "com.bolsadetrabajo.c11027_c27130_c13258"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAReLtcuChXUNt8LIC5uyZ_7QADaP1n3Tg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

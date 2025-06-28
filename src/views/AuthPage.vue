@@ -25,25 +25,15 @@
             <ion-list>
               <p>Usuario o correo</p>
               <ion-item>
-                <ion-input
-                  type="text"
-                  placeholder="example@example.com"
-                  v-model="loginInput"
-                ></ion-input>
+                <ion-input type="text" placeholder="example@example.com" v-model="loginInput"></ion-input>
               </ion-item>
 
               <p>Clave</p>
               <ion-item :class="{ 'input-error': error }">
-                <ion-input
-                  :type="showPassword ? 'text' : 'password'"
-                  placeholder="••••••••••••"
-                  v-model="password"
-                ></ion-input>
-                <ion-icon
-                  :icon="showPassword ? eyeOff : eye"
-                  @click="togglePassword"
-                  class="password-toggle"
-                ></ion-icon>
+                <ion-input :type="showPassword ? 'text' : 'password'" placeholder="••••••••••••"
+                  v-model="password"></ion-input>
+                <ion-icon :icon="showPassword ? eyeOff : eye" @click="togglePassword"
+                  class="password-toggle"></ion-icon>
               </ion-item>
 
               <div class="forgot-password">
@@ -53,15 +43,11 @@
 
             <p v-if="error" class="error-message">{{ error }}</p>
 
-            <ion-button
-              type="submit"
-              expand="block"
-              class="ion-margin-top"
-              :disabled="loading"
-            >
+            <ion-button type="submit" expand="block" class="ion-margin-top" :disabled="loading">
               <ion-spinner v-if="loading" name="dots"></ion-spinner>
               <span v-else>Ingresar</span>
             </ion-button>
+            <div id="googleSignInDiv" class="google-login-button"></div>
           </form>
 
           <!-- Formulario de Registro -->
@@ -69,74 +55,44 @@
             <ion-item>
               <ion-label>Tipo de usuario</ion-label>
               <ion-select v-model="loginUserType" interface="popover">
-                <ion-select-option value="applicant"
-                  >Candidato</ion-select-option
-                >
+                <ion-select-option value="applicant">Candidato</ion-select-option>
                 <ion-select-option value="company">Empresa</ion-select-option>
               </ion-select>
             </ion-item>
             <ion-list>
               <p>Nombre</p>
               <ion-item>
-                <ion-input
-                  type="text"
-                  placeholder="Juan"
-                  v-model="name"
-                ></ion-input>
+                <ion-input type="text" placeholder="Juan" v-model="name"></ion-input>
               </ion-item>
 
               <p>Apellido</p>
               <ion-item>
-                <ion-input
-                  type="text"
-                  placeholder="Pérez"
-                  v-model="lastname"
-                ></ion-input>
+                <ion-input type="text" placeholder="Pérez" v-model="lastname"></ion-input>
               </ion-item>
 
               <p>Nombre de usuario</p>
               <ion-item>
-                <ion-input
-                  type="text"
-                  placeholder="juanperez123"
-                  v-model="username"
-                ></ion-input>
+                <ion-input type="text" placeholder="juanperez123" v-model="username"></ion-input>
               </ion-item>
 
               <p>Correo electrónico</p>
               <ion-item>
-                <ion-input
-                  type="email"
-                  placeholder="example@example.com"
-                  v-model="email"
-                ></ion-input>
+                <ion-input type="email" placeholder="example@example.com" v-model="email"></ion-input>
               </ion-item>
               <p>Contraseña</p>
               <ion-item :class="{ 'input-error': passwordError }">
-                <ion-input
-                  :type="showPassword ? 'text' : 'password'"
-                  placeholder="••••••••••••"
-                  v-model="password"
-                ></ion-input>
-                <ion-icon
-                  :icon="showPassword ? eyeOff : eye"
-                  @click="togglePassword"
-                  class="password-toggle"
-                ></ion-icon>
+                <ion-input :type="showPassword ? 'text' : 'password'" placeholder="••••••••••••"
+                  v-model="password"></ion-input>
+                <ion-icon :icon="showPassword ? eyeOff : eye" @click="togglePassword"
+                  class="password-toggle"></ion-icon>
               </ion-item>
 
               <p>Confirmar Contraseña</p>
               <ion-item :class="{ 'input-error': passwordError }">
-                <ion-input
-                  :type="showConfirmPassword ? 'text' : 'password'"
-                  placeholder="••••••••••••"
-                  v-model="confirmPassword"
-                ></ion-input>
-                <ion-icon
-                  :icon="showConfirmPassword ? eyeOff : eye"
-                  @click="toggleConfirmPassword"
-                  class="password-toggle"
-                ></ion-icon>
+                <ion-input :type="showConfirmPassword ? 'text' : 'password'" placeholder="••••••••••••"
+                  v-model="confirmPassword"></ion-input>
+                <ion-icon :icon="showConfirmPassword ? eyeOff : eye" @click="toggleConfirmPassword"
+                  class="password-toggle"></ion-icon>
               </ion-item>
             </ion-list>
 
@@ -145,12 +101,7 @@
             </p>
             <p v-if="error" class="error-message">{{ error }}</p>
 
-            <ion-button
-              type="submit"
-              expand="block"
-              class="ion-margin-top"
-              :disabled="loading"
-            >
+            <ion-button type="submit" expand="block" class="ion-margin-top" :disabled="loading">
               <ion-spinner v-if="loading" name="dots"></ion-spinner>
               <span v-else>Registrarse</span>
             </ion-button>
@@ -167,7 +118,7 @@ import {
   registerApplicant,
   registerCompanyUser,
 } from "@/services/authService.ts";
-import { ref, computed } from "vue";
+import { ref, computed, /*onMounted*/ } from "vue";
 import { useRouter } from "vue-router";
 import { eye, eyeOff } from "ionicons/icons";
 import {
@@ -186,7 +137,13 @@ import {
   IonSpinner,
   IonIcon,
 } from "@ionic/vue";
+//import { loginWithGoogle } from '@/services/authService';
+//import { useAuthStore } from "@/stores/authStore";
 
+
+import { useNotificationService } from '@/services/NotificationService';
+
+const { initPush } = useNotificationService();
 const loginUserType = ref("");
 
 const router = useRouter();
@@ -204,7 +161,7 @@ const username = ref("");
 const email = ref("");
 const confirmPassword = ref("");
 const showConfirmPassword = ref(false);
-
+//const authStore = useAuthStore();
 const loading = ref(false);
 const error = ref("");
 
@@ -232,9 +189,10 @@ const handleLogin = async () => {
       loginInput: loginInput.value,
       password: password.value,
     });
-
+    await initPush();
     router.push("/tabs/home");
   } catch (err) {
+    console.error("Error en el login:", err);
     error.value = err.response?.data?.message || "Error de conexión";
   } finally {
     loading.value = false;
@@ -271,6 +229,7 @@ const handleRegister = async () => {
         role: "admin",
       });
     }
+    await initPush();
     router.push("/tabs/home");
   } catch (err) {
     error.value = err.response?.data?.message || "Error en el registro";
@@ -279,6 +238,43 @@ const handleRegister = async () => {
     loading.value = false;
   }
 };
+/*
+const handleGoogleCallback = async (response) => {
+  const idToken = response.credential;
+  try {
+    const { user, token } = await loginWithGoogle(idToken);
+    authStore.setAuthData({
+      user,
+      token,
+    });
+    console.log("Login OK", user);
+    router.push("/tabs/home");
+  } catch (error) {
+    console.error("Login fallido", error);
+  }
+};
+
+console.log(window.location.origin)
+onMounted(() => {
+  if (window.google) {
+    window.google.accounts.id.initialize({
+      client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+      callback: handleGoogleCallback,
+    });
+
+    window.google.accounts.id.renderButton(
+      document.getElementById('googleSignInDiv'),
+      {
+        theme: 'outline',
+        size: 'large',
+        type: 'standard',
+      }
+    );
+  } else {
+    console.warn("Google SDK no cargado aún.");
+  }
+});
+*/
 </script>
 
 <style scoped>

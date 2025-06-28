@@ -8,6 +8,8 @@
 
             <ion-select interface="popover" placeholder="Menú" v-model="selectedOption" @ionChange="handleCompanyMenu">
               <ion-select-option value="my-applications">Ver Postulaciones</ion-select-option>
+              <ion-select-option value="notifications">
+                Notificaciones</ion-select-option>
             </ion-select>
           </template>
 
@@ -17,6 +19,8 @@
               <ion-select-option value="applications">Administrar Postulaciones</ion-select-option>
               <ion-select-option value="posts">Administrar Publicaciones</ion-select-option>
             </ion-select>
+
+
 
           </template>
 
@@ -48,7 +52,9 @@
         </div>
       </div>
 
-      <ExploreContainer name="Tab 1 page" />
+
+
+      <!--  <ExploreContainer name="Tab 1 page" />-->
     </ion-content>
   </ion-page>
 </template>
@@ -65,9 +71,10 @@ import {
   IonButton,
 } from '@ionic/vue';
 import { arrowBackOutline, personOutline } from 'ionicons/icons';
-import ExploreContainer from '@/components/ExploreContainer.vue';
+//import ExploreContainer from '@/components/ExploreContainer.vue';
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
+
 const router = useRouter();
 import {
   IonSelect,
@@ -100,7 +107,7 @@ watch(
     if (newType === 'company') {
       const companyId = authStore.getCompanyId();
       console.log('Watch detectó companyId:', companyId);
-      if (!companyId) {
+      if (!companyId && authStore.userType === 'company') {
         console.log('No hay empresa asociada, mostrando advertencia');
         showCompanyWarning.value = true;
       }

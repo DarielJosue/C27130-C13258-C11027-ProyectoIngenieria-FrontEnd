@@ -60,10 +60,18 @@ export const authService = {
     try {
       await apiClient.post("/logout"); // Asume POST, usa el método de tu API
     } catch (error) {
-     console.error("Error al cerrar sesión:", error);
+      console.error("Error al cerrar sesión:", error);
     }
-    
+
     const authStore = useAuthStore();
     authStore.clearAuthData();
   }
 }
+
+/*export const loginWithGoogle = async (idToken: string) => {
+  const response = await apiClient.post("/auth/google", {
+    id_token: idToken,
+  });
+
+  return response.data;
+};*/

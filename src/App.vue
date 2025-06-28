@@ -8,21 +8,30 @@
 </template>
 
 <script setup lang="ts">
-  import { IonApp, IonRouterOutlet } from '@ionic/vue';
-  import { ref, watch } from 'vue';
-  import { useRoute } from 'vue-router';
+import { IonApp, IonRouterOutlet } from '@ionic/vue';
+import { ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
+import { onMounted } from 'vue';
 
-  const route = useRoute();
-  const transitionName = ref('fade');
+import { useNotificationService } from './services/NotificationService';
 
-  watch(() => route.path, (newPath, oldPath) => {
-    // transiciones 
-    transitionName.value = newPath === '/login' && oldPath === '/register' ? 'slide-right' : 'slide-left';
-  });
+const { initPush } = useNotificationService();
+
+
+const route = useRoute();
+const transitionName = ref('fade');
+
+
+onMounted(() => {
+  initPush();
+});
+watch(() => route.path, (newPath, oldPath) => {
+  // transiciones 
+  transitionName.value = newPath === '/login' && oldPath === '/register' ? 'slide-right' : 'slide-left';
+});
 
 </script>
 <style>
-
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.3s ease;
@@ -58,7 +67,8 @@
 }
 
 .tabs .tab {
-  text-decoration: none; /* Elimina subrayado de enlace */
+  text-decoration: none;
+  /* Elimina subrayado de enlace */
   color: #aaa;
   cursor: pointer;
 }
@@ -67,5 +77,5 @@
   color: #4a75e7;
   font-weight: bold;
   border-bottom: 2px solid #4a75e7;
-} 
+}
 </style>
