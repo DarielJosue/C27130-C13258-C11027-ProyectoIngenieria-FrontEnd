@@ -24,21 +24,18 @@ export const useNotificationService = () => {
                 });
                 console.log('Token guardado en el backend');
             } catch (error) {
-                console.error('❌ Error al guardar el token:', error);
+                console.error('Error al guardar el token:', error);
             }
         });
 
-        // En caso de error en el registro
         PushNotifications.addListener('registrationError', (error) => {
             console.error('Error al registrar notificaciones push:', error);
         });
 
-        // Cuando llega una notificación en primer plano
         PushNotifications.addListener('pushNotificationReceived', async (notification: PushNotificationSchema) => {
             console.log('📨 Notificación recibida:', notification);
             notifications.value.unshift(notification);
 
-            // Opcional: mostrar también una notificación local
             await LocalNotifications.schedule({
                 notifications: [{
                     id: Date.now(),
@@ -49,7 +46,6 @@ export const useNotificationService = () => {
             });
         });
 
-        // Cuando el usuario interactúa con la notificación
         PushNotifications.addListener('pushNotificationActionPerformed', (action) => {
             console.log('Acción sobre la notificación:', action);
         });
