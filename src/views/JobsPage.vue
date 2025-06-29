@@ -4,7 +4,7 @@
       <ion-toolbar>
         <!-- Buscador con botón atrás y perfil -->
         <div class="search-bar">
-          <ion-searchbar class="search-input" placeholder="Buscar..." />
+          <ion-searchbar class="search-input" placeholder="Buscar..." @ionInput="handleSearch" :debounce="300" />
           <router-link to="/profile">
             <ion-avatar class="avatar-btn">
               <ion-icon :icon="personOutline" />
@@ -15,12 +15,15 @@
     </ion-header>
 
     <ion-content class="ion-padding">
+      <div v-if="isLoading" class="loading-spinner">
+        <ion-spinner name="crescent"></ion-spinner>
+      </div>
       <ion-refresher slot="fixed" @ionRefresh="loadPosts">
         <ion-refresher-content pulling-icon="chevron-down-circle-outline"
           refreshing-spinner="bubbles"></ion-refresher-content>
       </ion-refresher>
 
-      <ion-list v-if="jobPosts.length > 0">
+      <ion-list v-if="!isLoading && jobPosts.length > 0">
         <ion-card class="job-card" v-for="post in jobPosts" :key="post.id">
           <ion-card-header>
             <ion-card-title class="title">{{ post.title }}</ion-card-title>
@@ -53,7 +56,7 @@
 
       </ion-list>
 
-      <div v-else class="no-posts">
+      <div v-if="!isLoading && jobPosts.length === 0" class="no-posts">
         <p>No hay publicaciones disponibles.</p>
       </div>
     </ion-content>
@@ -83,7 +86,8 @@ import {
   IonCardContent,
   IonList,
   IonRefresher,
-  IonRefresherContent
+  IonRefresherContent,
+  IonSpinner,
 } from "@ionic/vue";
 
 import { saveJobPost } from "@/services/jobPostService";
@@ -100,8 +104,15 @@ interface JobPost {
   location: string;
   company_name?: string;
 }
-
+const searchTerm = ref('');
 const jobPosts = ref<JobPost[]>([]);
+const isLoading = ref(false);
+
+// Manejador de búsqueda
+const handleSearch = (event: CustomEvent) => {
+  searchTerm.value = event.detail.value || '';
+  loadPosts();
+};
 
 
 const router = useRouter();
@@ -121,14 +132,18 @@ const save = async (id: number) => {
 };
 
 const loadPosts = async (event?: CustomEvent) => {
+  isLoading.value = true;
+
   try {
-    const response = await getAllJobPosts();
-    console.log("Publicaciones cargadas:", response);
-    jobPosts.value = response.data || []; 
+    const response = await getAllJobPosts(searchTerm.value);
+    jobPosts.value = response.data || [];
   } catch (err) {
     console.error("Error al cargar publicaciones", err);
   } finally {
-    (event?.target as HTMLIonRefresherElement)?.complete();
+    isLoading.value = false; 
+    if (event) {
+      (event.target as HTMLIonRefresherElement).complete();
+    }
   }
 };
 
@@ -142,6 +157,17 @@ onMounted(loadPosts);
   font-family: "Jaldi", sans-serif;
 }
 
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+}
+
+ion-spinner {
+  transform: scale(1.5);
+  --color: var(--ion-color-primary);
+}
 
 .search-bar {
   display: flex;

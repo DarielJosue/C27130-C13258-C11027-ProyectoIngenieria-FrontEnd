@@ -12,8 +12,9 @@ export const createJobPost = async (payload: {
   return response.data;
 
 }
-export const getAllJobPosts = async () => {
-  const response = await apiClient.get("/job-posts");
+export const getAllJobPosts = async (searchTerm?: string) => {
+  const params = searchTerm ? { params: { search: searchTerm } } : {};
+  const response = await apiClient.get("/job-posts", params);
   return response.data;
 };
 
