@@ -35,7 +35,7 @@ import {
 } from "@ionic/vue";
 import { onMounted } from "vue";
 import { useNotificationService } from "@/services/NotificationService";
-
+import { Capacitor } from "@capacitor/core";
 const { initPush, getNotifications, loadStoredNotifications } = useNotificationService();
 const notificaciones = getNotifications();
 
@@ -43,8 +43,10 @@ const notificaciones = getNotifications();
 const tiemposSimulados = ["4m", "15m", "30m", "1h", "2h"];
 
 onMounted(async () => {
-  await initPush();
-  await loadStoredNotifications();
+  if (Capacitor.getPlatform() === "android") {
+    await initPush();
+    await loadStoredNotifications();
+  }
 });
 </script>
 

@@ -142,6 +142,7 @@ import {
 
 
 import { useNotificationService } from '@/services/NotificationService';
+import { Capacitor } from "@capacitor/core";
 
 const { initPush } = useNotificationService();
 const loginUserType = ref("");
@@ -189,7 +190,10 @@ const handleLogin = async () => {
       loginInput: loginInput.value,
       password: password.value,
     });
-    await initPush();
+    if (Capacitor.getPlatform() === "android") {
+      await initPush();
+    }
+
     router.push("/tabs/home");
   } catch (err) {
     console.error("Error en el login:", err);
@@ -229,7 +233,9 @@ const handleRegister = async () => {
         role: "admin",
       });
     }
-    await initPush();
+    if (Capacitor.getPlatform() === "android") {
+      await initPush();
+    }
     router.push("/tabs/home");
   } catch (err) {
     error.value = err.response?.data?.message || "Error en el registro";
