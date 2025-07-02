@@ -88,6 +88,8 @@ import {
   calendarOutline,
   downloadOutline
 } from "ionicons/icons";
+import { Browser } from '@capacitor/browser';
+import { isPlatform } from '@ionic/vue';
 
 
 addIcons({
@@ -115,11 +117,23 @@ onMounted(async () => {
 const formatDate = (dateStr: string) => {
   return new Date(dateStr).toLocaleDateString();
 };
-const CV_URL = "http://localhost:8000";
+const CV_URL = "http://192.168.1.72:8000";
 
-const downloadCV = (filePath: string) => {
+const downloadCV = async (filePath: string) => {
   if (!filePath) return alert('No hay currículum disponible');
-  window.open(`${CV_URL}/storage/${filePath}`, '_blank');
+
+  const cvUrl = `${CV_URL}/storage/${filePath}`;
+
+  if (isPlatform('capacitor')) {
+    try {
+      await Browser.open({ url: cvUrl });
+      return;
+    } catch (error) {
+      console.warn('Error abriendo el CV en Capacitor:', error);
+    }
+  }
+
+  window.open(cvUrl, isPlatform('capacitor') ? '_system' : '_blank');
 };
 </script>
 
