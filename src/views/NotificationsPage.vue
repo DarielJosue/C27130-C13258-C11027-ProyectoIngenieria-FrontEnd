@@ -32,7 +32,7 @@ import {
   IonItem,
   IonLabel,
 } from "@ionic/vue";
-import { onMounted, ref } from "vue";
+import { onMounted } from "vue";
 import { useNotificationService } from "@/services/NotificationService";
 import { Capacitor } from "@capacitor/core";
 const { initPush, getNotifications, loadStoredNotifications } = useNotificationService();

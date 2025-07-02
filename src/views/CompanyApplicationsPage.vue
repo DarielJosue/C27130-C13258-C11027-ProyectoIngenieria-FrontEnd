@@ -54,6 +54,8 @@ import { ref, onMounted, computed } from 'vue';
 import { getCompanyApplications, updateApplicationStatus } from '@/services/applicationService';
 import { getCompanyJobPosts } from '@/services/jobPostService';
 import { useAuthStore } from '@/stores/authStore';
+import { Browser } from '@capacitor/browser';
+import { isPlatform } from '@ionic/vue';
 
 const authStore = useAuthStore();
 const companyId = authStore.companyId;
@@ -98,11 +100,23 @@ const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString();
 };
 
-const CV_URL = "http://localhost:8000";
+const CV_URL = "http://192.168.1.72:8000";
 
-const downloadCV = (filePath: string) => {
+const downloadCV = async (filePath: string) => {
     if (!filePath) return alert('No hay currículum disponible');
-    window.open(`${CV_URL}/storage/${filePath}`, '_blank');
+
+    const cvUrl = `${CV_URL}/storage/${filePath}`;
+
+    if (isPlatform('capacitor')) {
+        try {
+            await Browser.open({ url: cvUrl });
+            return;
+        } catch (error) {
+            console.warn('Error abriendo el CV en Capacitor:', error);
+        }
+    }
+
+    window.open(cvUrl, isPlatform('capacitor') ? '_system' : '_blank');
 };
 </script>
 cam
