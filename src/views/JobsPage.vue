@@ -24,7 +24,7 @@
       </ion-refresher>
 
       <ion-list v-if="!isLoading && jobPosts.length > 0">
-        <ion-card class="job-card" v-for="post in jobPosts" :key="post.id">
+        <ion-card class="job-card" v-for="post in jobPosts" :key="post.job_post_id">
           <ion-card-header>
             <ion-card-title class="title">{{ post.title }}</ion-card-title>
             <ion-card-subtitle class="subtitle">{{ post.company_name }}</ion-card-subtitle>
@@ -45,11 +45,11 @@
             </div>
 
             <div class="action-buttons">
-              <ion-button size="small" @click="goToDetail(post.id)" color="primary">Ver</ion-button>
-              <router-link :to="`/jobs/${post.id}/apply`" style="text-decoration: none;">
+              <ion-button size="small" @click="goToDetail(post.job_post_id)" color="primary">Ver</ion-button>
+              <router-link :to="`/jobs/${post.job_post_id}/apply`" style="text-decoration: none;">
                 <ion-button slot="end" size="small" color="secondary">Aplicar</ion-button>
               </router-link>
-              <ion-button size="small" fill="outline" color="medium" @click="save(post.id)">Guardar</ion-button>
+              <ion-button size="small" fill="outline" color="medium" @click="save(post.job_post_id)">Guardar</ion-button>
             </div>
           </ion-card-content>
         </ion-card>
@@ -96,7 +96,7 @@ addIcons({
   "chevron-down-circle-outline": chevronDownCircleOutline,
 });
 interface JobPost {
-  id: number;
+  job_post_id: number;
   title: string;
   description: string;
   requirements: string;
@@ -117,13 +117,18 @@ const handleSearch = (event: CustomEvent) => {
 
 const router = useRouter();
 
-const goToDetail = (id: number) => {
-  router.push(`/job-posts/${id}`);
+const goToDetail = (job_post_id: number) => {
+  console.log("Navigating to job post detail:", job_post_id);
+  if (!job_post_id) {  
+  console.error("ID is undefined or null");
+    return;
+  }
+  router.push(`/job-posts/${job_post_id}`);
 };
 
-const save = async (id: number) => {
+const save = async (job_post_id: number) => {
   try {
-    await saveJobPost(id);
+    await saveJobPost(job_post_id);
     alert("Oferta guardada correctamente.");
   } catch (err) {
     console.error("Error al guardar:", err);
